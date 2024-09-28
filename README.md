@@ -13,4 +13,3 @@ Besides deploying django app, static files from tailwind must be generated.
 1. python manage.py tailwind build
 2. python manage.py collectstatic
 
-

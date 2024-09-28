@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
+import json
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -25,7 +26,7 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.getenv('DEBUG', False))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = json.loads(os.getenv('ALLOWED_HOSTS', ''))
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -91,12 +92,26 @@ ASGI_APPLICATION = 'aitutor.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': str(os.getenv('POSTGRES_DB')),
+            'USER': str(os.getenv('DATABASE_USER')),
+            'PASSWORD': str(os.getenv('POSTGRES_PASSWORD')),
+            'HOST': str(os.getenv('DATABASE_HOST', '127.0.0.1')),
+            'PORT': int(os.getenv('DATABASE_PORT', 5432)),
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
