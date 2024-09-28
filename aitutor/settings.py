@@ -26,16 +26,16 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.getenv('DEBUG', False))
 
-ALLOWED_HOSTS = json.loads(os.getenv('ALLOWED_HOSTS', ''))
+ALLOWED_HOSTS = json.loads(os.getenv('ALLOWED_HOSTS'))
 
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
 AUTH_USER_MODEL = 'account.CustomUser'
-# LOGIN_REDIRECT_URL = 'api:main-panel'
-# LOGIN_URL='users:login'
-# LOGOUT_REDIRECT_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'chat:main'
+LOGIN_URL='account:login'
+LOGOUT_REDIRECT_URL = 'account:login'
 
 # Application definition
 

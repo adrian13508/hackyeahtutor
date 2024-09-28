@@ -1,0 +1,116 @@
+<!-- templates/chat.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with AI</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .messages {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .user-message {
+            font-weight: bold;
+            color: #333;
+        }
+        .ai-response {
+            color: #0066cc;
+        }
+        form {
+            display: flex;
+            justify-content: space-between;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Chat with AI</h1>
+        <div class="messages" id="chat-messages">
+            <!-- Chat messages will be displayed here -->
+        </div>
+        <form id="chat-form">
+            <input type="text" name="message" id="message" placeholder="Type your message here..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            // Handle the form submission
+            $('#chat-form').on('submit', function(event){
+                event.preventDefault();
+
+                // Get the message from the input field
+                var userMessage = $('#message').val();
+
+                // Clear the input field
+                $('#message').val('');
+
+                // Display the user's message in the chat
+                $('#chat-messages').append('<div class="message user-message">You: ' + userMessage + '</div>');
+
+                // Send the message to the Django view
+                $.ajax({
+                    url: '{% url "chat:main" %}',
+                    method: 'POST',
+                    data: {
+                        message: userMessage,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(data){
+                        // Display the AI response in the chat
+                        $('#chat-messages').append('<div class="message ai-response">AI: ' + data.response + '</div>');
+
+                        // Scroll to the bottom of the chat
+                        $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+                    },
+                    error: function(xhr, status, error){
+                        // Display an error message
+                        $('#chat-messages').append('<div class="message ai-response">Error: ' + error + '</div>');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
