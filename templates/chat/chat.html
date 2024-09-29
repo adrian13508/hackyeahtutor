@@ -1,0 +1,67 @@
+<!-- templates/chat.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with AI</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold text-center mb-6">Chat with AI</h1>
+        
+        <div id="chat-messages" class="messages max-h-96 overflow-y-auto mb-6 border border-gray-300 p-4 rounded-lg bg-gray-50">
+            <!-- Chat messages will be displayed here -->
+        </div>
+        
+        <form id="chat-form" class="flex space-x-3">
+            <input type="text" name="message" id="message" class="flex-grow p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Type your message here..." required>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+                Send
+            </button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            // Handle the form submission
+            $('#chat-form').on('submit', function(event){
+                event.preventDefault();
+
+                // Get the message from the input field
+                var userMessage = $('#message').val();
+
+                // Clear the input field
+                $('#message').val('');
+
+                // Display the user's message in the chat
+                $('#chat-messages').append('<div class="message user-message mb-2"><span class="font-bold text-gray-900">You:</span> ' + userMessage + '</div>');
+
+                // Send the message to the Django view
+                $.ajax({
+                    url: '{% url "chat:chat" %}',
+                    method: 'POST',
+                    data: {
+                        message: userMessage,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(data){
+                        // Display the AI response in the chat
+                        $('#chat-messages').append('<div class="message ai-response mb-2"><span class="font-bold text-blue-600">AI:</span> ' + data.response + '</div>');
+
+                        // Scroll to the bottom of the chat
+                        $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+                    },
+                    error: function(xhr, status, error){
+                        // Display an error message
+                        $('#chat-messages').append('<div class="message ai-response text-red-500">Error: ' + error + '</div>');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

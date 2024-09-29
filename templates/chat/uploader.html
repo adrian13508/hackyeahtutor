@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-10">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Start Learning</h1>
+            <p class="text-lg text-gray-600 mt-4">Enter the URL of the article you want to learn about.</p>
+        </div>
+
+        <div class="w-full max-w-md">
+            {% if user.is_authenticated %}
+                <form method="post" target="_self" class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="url" class="block text-gray-700 text-sm font-bold mb-2">Enter URL:</label>
+                        <input type="url" name="url" id="url" placeholder="https://example.com" 
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+
+                    <div class="flex items-center justify-center">
+                        <input type="submit" value="Start Learning" 
+                               class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline cursor-pointer">
+                    </div>
+                </form>
+            {% else %}
+                <a href="{% url 'account:login' %}" class="text-lg font-medium bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
+                    Log In
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

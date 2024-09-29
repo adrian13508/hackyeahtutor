@@ -1,8 +1,13 @@
 from django.shortcuts import render
+import logging
 
 from django.shortcuts import render
 from django.http import JsonResponse
 from .utils import run_flow  # Import the helper function
+from . import models
+
+
+logger = logging.getLogger('main')
 
 
 def chat_view(request):
@@ -26,6 +31,8 @@ def chat_view(request):
                 },
                 api_key=api_key
             )
+
+            logger.info(response_data)
             ai_response = response_data.get('response', 'No response received.')
         except Exception as e:
             ai_response = f'Error connecting to LangFlow: {e}'
@@ -33,7 +40,7 @@ def chat_view(request):
         return JsonResponse({'message': user_message, 'response': ai_response})
 
     # Render the chat template for GET requests
-    return render(request, 'chat.html')
+    return render(request, 'chat/chat.html')
 
 
 def index(request):
@@ -41,4 +48,29 @@ def index(request):
 
 
 def chat(request):
-    return render(request, 'chat.html')
+    return render(request, 'chat/chat.html')
+
+
+def user_panel(request):
+    return render(request, 'chat/user_panel.html')
+
+
+def uploader(request):
+    if request.method == "POST":
+        # article_url = request.POST.get('url')
+        # session = models.LearningSession.objects.create(user=request.user, article_url=article_url)
+
+        return render(request, 'chat/document_summary.html')
+    return render(request, 'chat/uploader.html')
+
+
+def document_summary(request):
+    return render(request, 'chat/document_summary.html')
+
+
+def read(request):
+    return render(request, 'chat/read.html')
+
+
+def recall(request):
+    return render(request, 'chat/recall.html')

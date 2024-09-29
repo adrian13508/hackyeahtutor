@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 relative">
-        <h1 class="text-4xl font-bold text-center mb-10 text-gray-800">Learning Buddy</h1>
+        <h1 class="text-4xl font-bold text-center mb-10 text-gray-800">Study Buddy</h1>
 
         <!-- User Panel button moved to the top right -->
-        <div class="absolute top-10 right-20">
+        <div class="absolute top-5 right-5">
             {% if user.is_authenticated %}
                 <a href="{% url 'chat:user_panel' %}" class="text-lg font-medium bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
                     User Panel
@@ -14,10 +14,11 @@
 
         <!-- Main content area -->
         <div class="flex flex-col items-center space-y-6 mx-80">
-            <h2 class="text-2xl font-semibold text-gray-700 text-center">
-                Accelerate your learning with proven methods like SQ3R, Bloom's Taxonomy, and others. 
-                Our platform uses techniques such as spaced repetition, active recall, and the Feynman Technique to help you learn faster and retain more information.
-            </h2>
+
+            <p class="text-lg text-gray-600 text-center">
+                Please read the article thoroughly before returning here to start your recall session. 
+                This will enhance your understanding and retention of the material.
+            </p>
         </div>
 
         <!-- Centered Login button if not authenticated -->

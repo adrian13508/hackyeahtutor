@@ -13,6 +13,8 @@ import os
 import json
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import datetime
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,7 +35,7 @@ INTERNAL_IPS = [
 ]
 
 AUTH_USER_MODEL = 'account.CustomUser'
-LOGIN_REDIRECT_URL = 'chat:main'
+LOGIN_REDIRECT_URL = 'chat:user_panel'
 LOGIN_URL='account:login'
 LOGOUT_REDIRECT_URL = 'account:login'
 
@@ -151,3 +153,66 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if not DEBUG:
+    CSRF_TRUSTED_ORIGINS = ["https://hackyeah.plantjournal.online/"]
+
+if not os.path.exists('logs'):
+        os.makedirs('logs')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    "formatters": {
+        "verbose": {
+            "format": "{name} {levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{asctime} {levelname} {message}",
+            "datefmt": '%Y-%m-%d %H:%M:%S',
+            "style": "{",
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'debug': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, f'logs/logs-{datetime.now().strftime("%Y-%m-%d")}.log'),
+        },
+        'logs': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, f'logs/logs-{datetime.now().strftime("%Y-%m-%d")}.log'),
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        'debug': {
+            'handlers': ['logs'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'main': {
+            'handlers': ['logs', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'ad_interactions': {
+            'handlers': ['logs'],
+            'level': 'INFO',
+            'propagate': True,
+        }
+    },
+}

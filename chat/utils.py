@@ -3,8 +3,11 @@
 import requests
 import os
 from typing import Optional
+import logging
 
-BASE_API_URL = str(os.getenv('LANGCHAIN_URL'))
+logger = logging.getLogger('main')
+
+BASE_API_URL = str(os.getenv('LANGFLOW_URL'))
 FLOW_ID = "c2d8e99d-1ef9-40f9-8c9a-c0298b8e483d"
 ENDPOINT = ""  # Use a specific endpoint name if required
 
@@ -47,4 +50,5 @@ def run_flow(
     headers = {"x-api-key": api_key} if api_key else None
 
     response = requests.post(api_url, json=payload, headers=headers)
+    logger.info(response.json())
     return response.json()
