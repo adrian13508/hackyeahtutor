@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <h1 class="text-3xl text-center my-20">Document Analyzed</h1>
+
+    <!-- Informational paragraph -->
+    <p class="text-lg text-center mb-8 mx-64">
+        The application has analyzed your document and determined that the most effective method for learning this material is the SQ3R method. 
+        This structured approach will enhance your understanding and retention of the content.
+    </p>
+    
+    <!-- Collapsible component for SQ3R method summary -->
+    <div class="w-full max-w-[90%] mx-auto ">
+        <div class="flex justify-center mt-10 msx-w-64">
+            <button 
+                type="button" 
+                class="text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-64 transition-colors"
+                data-collapse-toggle="sq3r-summary"
+                aria-expanded="false"
+                aria-controls="sq3r-summary"
+            >
+                Show SQ3R Method Summary
+            </button>
+        </div>
+        <div id="sq3r-summary" class="mt-4 hidden">
+            <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+                <h2 class="text-lg font-bold mb-2">SQ3R Method Summary:</h2>
+                <p>
+                    The SQ3R method is an effective study and reading technique developed to improve understanding and retention of material. 
+                    It stands for Survey, Question, Read, Recite, and Review.
+                </p>
+                <p><strong>S - Survey:</strong> Begin by quickly surveying the material. Look over headings, subheadings, summaries, and any bolded or highlighted text to get an overview of the content.</p>
+                <p><strong>Q - Question:</strong> Turn headings into questions. Asking questions before you start reading helps to focus your attention and sets a purpose for reading.</p>
+                <p><strong>R - Read:</strong> Read actively, searching for answers to the questions you've formed. Focus on understanding key concepts and ideas rather than reading word for word.</p>
+                <p><strong>R - Recite:</strong> After reading, close the book and try to recite, in your own words, the key points and answers to your questions. This helps solidify the information in your memory.</p>
+                <p><strong>R - Review:</strong> Review the material after a few days to reinforce what you've learned. Revisit the questions and see if you can still answer them without looking at the text.</p>
+                <p>
+                    The SQ3R method not only helps in improving comprehension but also in making studying more efficient by focusing on active reading and engagement with the material.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- "Start Learning" button -->
+    <div class="flex justify-center mt-10">
+        <a href="{% url 'chat:read' %}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
+            Start Learning
+        </a>
+    </div>
+</div>
+
+<script>
+    // Script to toggle the collapsible component
+    document.querySelector('[data-collapse-toggle]').addEventListener('click', function() {
+        var target = document.getElementById(this.getAttribute('aria-controls'));
+        if (target.classList.contains('hidden')) {
+            target.classList.remove('hidden');
+        } else {
+            target.classList.add('hidden');
+        }
+    });
+</script>
+{% endblock %}
