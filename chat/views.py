@@ -1,11 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import logging
 
 from django.shortcuts import render
 from django.http import JsonResponse
 from .utils import run_flow  # Import the helper function
 from . import models
-
+from . import forms
+from django.forms import formset_factory
 
 logger = logging.getLogger('main')
 
@@ -60,12 +61,25 @@ def uploader(request):
         # article_url = request.POST.get('url')
         # session = models.LearningSession.objects.create(user=request.user, article_url=article_url)
 
-        return render(request, 'chat/document_summary.html')
+        return redirect('chat:survey')
     return render(request, 'chat/uploader.html')
 
 
 def document_summary(request):
     return render(request, 'chat/document_summary.html')
+
+
+def survey(request):
+    QuestionFormSet = formset_factory(forms.QuestionForm, extra=1, max_num=10)
+
+    if request.method == 'POST':
+        formset = QuestionFormSet(request.POST)
+        if formset.is_valid():
+            print(formset)
+            return redirect('chat:read')  # Redirect after processing
+    else:
+        formset = QuestionFormSet()
+    return render(request, 'chat/survey.html', {"formset": formset})
 
 
 def read(request):

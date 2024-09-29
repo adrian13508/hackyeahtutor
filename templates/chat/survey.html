@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
     <div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 relative">
-        <h1 class="text-4xl font-bold text-center mb-10 text-gray-800">Study Buddy</h1>
+        <h1 class="text-4xl font-bold text-center mb-10 text-gray-800">Survey</h1>
 
         <!-- User Panel button moved to the top right -->
         <div class="absolute top-5 right-5">
             {% if user.is_authenticated %}
-                <a href="{% url 'chat:user_panel' %}" class="text-lg font-medium bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+                <a href="{% url 'chat:user_panel' %}"
+                   class="text-lg font-medium bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
                     User Panel
                 </a>
             {% endif %}
@@ -15,19 +17,64 @@
         <!-- Main content area -->
         <div class="flex flex-col items-center space-y-6 mx-80">
 
-            <p class="text-lg text-gray-600 text-center">
-                Please read the article thoroughly before returning here to start your recall session. 
-                This will enhance your understanding and retention of the material.
-            </p>
+            <!-- Form for adding questions -->
+            <form method="post" id="question-form" class="w-full">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                <div id="question-fields">
+                    <!-- Render initial question field -->
+                    <div class="mb-4">
+                        {{ formset.forms.0.question.label_tag }}
+                        {{ formset.forms.0.question }}
+                    </div>
+                </div>
+                <div class="flex justify-center mt-4">
+                    <button type="button" id="add-question" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+                        Add Another Question
+                    </button>
+                </div>
+                <div class="w-full flex justify-center mt-8">
+                    <input type="submit" value="Submit Questions" class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
+                </div>
+            </form>
         </div>
 
         <!-- Centered Login button if not authenticated -->
         <div class="mt-8">
             {% if not user.is_authenticated %}
-                <a href="{% url 'account:login' %}" class="text-lg font-medium bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
+                <a href="{% url 'account:login' %}"
+                   class="text-lg font-medium bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
                     Log In
                 </a>
             {% endif %}
         </div>
     </div>
+
+    <script>
+        const maxQuestions = 10; // Maximum number of questions allowed
+        let currentQuestionCount = 1; // Initial question count
+
+        document.getElementById('add-question').addEventListener('click', function() {
+            if (currentQuestionCount < maxQuestions) {
+                // Clone the last question field
+                const lastQuestion = document.querySelector('#question-fields div:last-child');
+                const newQuestion = lastQuestion.cloneNode(true);
+                
+                // Clear the value of the new input
+                newQuestion.querySelector('input').value = '';
+                
+                // Update the question label and name
+                const newIndex = currentQuestionCount;
+                newQuestion.querySelector('label').setAttribute('for', `id_form-${newIndex}-question`);
+                newQuestion.querySelector('input').setAttribute('name', `form-${newIndex}-question`);
+                newQuestion.querySelector('input').setAttribute('id', `id_form-${newIndex}-question`);
+
+                // Append the new question field
+                document.getElementById('question-fields').appendChild(newQuestion);
+                currentQuestionCount++;
+            } else {
+                alert("You can only add up to 10 questions.");
+            }
+        });
+    </script>
 {% endblock %}

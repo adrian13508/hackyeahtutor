@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 relative">
-        <h1 class="text-4xl font-bold text-center mb-10 text-gray-800">Study Buddy</h1>
+        <h1 class="text-4xl font-bold text-center mb-10 text-gray-800">Read</h1>
 
         <!-- User Panel button moved to the top right -->
         <div class="absolute top-5 right-5">
             {% if user.is_authenticated %}
-                <a href="{% url 'chat:user_panel' %}" class="text-lg font-medium bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+                <a href="{% url 'chat:user_panel' %}"
+                   class="text-lg font-medium bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
                     User Panel
                 </a>
             {% endif %}
@@ -16,15 +17,22 @@
         <div class="flex flex-col items-center space-y-6 mx-80">
 
             <p class="text-lg text-gray-600 text-center">
-                Please read the article thoroughly before returning here to start your recall session. 
+                Please read the article thoroughly before returning here to start your recall session.
                 This will enhance your understanding and retention of the material.
             </p>
+        </div>
+        <div class="w-full flex justify-center mt-8">
+            <a href="{% url 'chat:recall' %}"
+               class="text-lg font-medium bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition">
+                Next step
+            </a>
         </div>
 
         <!-- Centered Login button if not authenticated -->
         <div class="mt-8">
             {% if not user.is_authenticated %}
-                <a href="{% url 'account:login' %}" class="text-lg font-medium bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
+                <a href="{% url 'account:login' %}"
+                   class="text-lg font-medium bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
                     Log In
                 </a>
             {% endif %}
